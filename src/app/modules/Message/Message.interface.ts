@@ -6,5 +6,6 @@ export interface IMessage {
   content: string;
   isRead: boolean;
   isDeleted: boolean;
-  createdAt?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
