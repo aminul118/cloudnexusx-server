@@ -24,7 +24,31 @@ const getAllPortfoliosFromDB = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
+const getSinglePortfolioFromDB = async (id: string) => {
+  const result = await Portfolio.findById(id);
+  return result;
+};
+
+const updatePortfolioIntoDB = async (id: string, payload: Partial<IPortfolio>) => {
+  const result = await Portfolio.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return result;
+};
+
+const deletePortfolioFromDB = async (id: string) => {
+  const result = await Portfolio.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true },
+  );
+  return result;
+};
+
 export const PortfolioService = {
   createPortfolioIntoDB,
   getAllPortfoliosFromDB,
+  getSinglePortfolioFromDB,
+  updatePortfolioIntoDB,
+  deletePortfolioFromDB,
 };

@@ -5,7 +5,20 @@ import httpStatus from "http-status-codes";
 import { PortfolioService } from "./Portfolio.service";
 
 const createPortfolio = catchAsync(async (req: Request, res: Response) => {
-  const result = await PortfolioService.createPortfolioIntoDB(req.body);
+  const portfolioData = { ...req.body };
+
+  if (req.file) {
+    portfolioData.image = (req.file as Express.Multer.File & { path: string }).path;
+  }
+
+  // Handle technologies if sent as string from FormData
+  if (typeof portfolioData.technologies === 'string') {
+    portfolioData.technologies = portfolioData.technologies
+      .split(',')
+      .map((t: string) => t.trim());
+  }
+
+  const result = await PortfolioService.createPortfolioIntoDB(portfolioData);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -26,7 +39,55 @@ const getAllPortfolios = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSinglePortfolio = catchAsync(async (req: Request, res: Response) => {
+  const result = await PortfolioService.getSinglePortfolioFromDB(req.params.id as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolio retrieved successfully",
+    data: result,
+  });
+});
+
+const updatePortfolio = catchAsync(async (req: Request, res: Response) => {
+  const portfolioData = { ...req.body };
+
+  if (req.file) {
+    portfolioData.image = (req.file as Express.Multer.File & { path: string }).path;
+  }
+
+  if (typeof portfolioData.technologies === 'string') {
+    portfolioData.technologies = portfolioData.technologies
+      .split(',')
+      .map((t: string) => t.trim());
+  }
+
+  const result = await PortfolioService.updatePortfolioIntoDB(
+    req.params.id as string,
+    portfolioData
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolio updated successfully",
+    data: result,
+  });
+});
+
+const deletePortfolio = catchAsync(async (req: Request, res: Response) => {
+  const result = await PortfolioService.deletePortfolioFromDB(req.params.id as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolio deleted successfully",
+    data: result,
+  });
+});
+
 export const PortfolioController = {
   createPortfolio,
   getAllPortfolios,
+  getSinglePortfolio,
+  updatePortfolio,
+  deletePortfolio,
 };

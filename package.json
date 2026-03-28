@@ -73,6 +73,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "redis": "^5.11.0",
+    "slugify": "^1.6.8",
     "socket.io": "^4.8.3",
     "zod": "^3.23.8"
   }
