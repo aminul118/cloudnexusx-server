@@ -8,6 +8,10 @@ export interface IUser {
   isVerified: boolean;
   status: UserStatus;
   isDeleted: boolean;
+  picture?: string;
+  designation?: string;
+  bio?: string;
+  contactNo?: string;
 }
 
 export type UserRole = 'ADMIN' | 'USER' | 'SUPER_ADMIN';

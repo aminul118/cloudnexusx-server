@@ -1,7 +1,7 @@
 import httpStatus from 'http-status-codes';
 import { IUser } from '@module/User/User.interface';
 import { User } from '@module/User/User.model';
-import { ILoginUser, IResetPassword } from './Auth.interface';
+import { IChangePassword, ILoginUser, IResetPassword } from './Auth.interface';
 import envVars from '@config/env';
 import AppError from '@error/AppError';
 import sendEmail from '@utils/sendEmail';
@@ -140,6 +140,30 @@ const verifyOTP = async (email: string, otp: string) => {
   };
 };
 
+const changePassword = async (user: { email: string }, payload: IChangePassword) => {
+  const userData = await User.findOne({ email: user.email }).select(
+    '+password',
+  );
+  if (!userData) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const isPasswordMatched = await User.isPasswordMatched(
+    payload.currentPassword,
+    userData.password,
+  );
+
+  if (!isPasswordMatched) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Current password not matched');
+  }
+
+  const hashedPassword = await bcrypt.hash(payload.newPassword, 12);
+
+  await User.updateOne({ email: user.email }, { password: hashedPassword });
+
+  return null;
+};
+
 export const AuthService = {
   loginUser,
   registerUser,
@@ -147,4 +171,5 @@ export const AuthService = {
   resetPassword,
   sendOTP,
   verifyOTP,
+  changePassword,
 };

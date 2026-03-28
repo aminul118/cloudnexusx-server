@@ -30,4 +30,10 @@ router.patch(
 
 router.delete('/:id', auth('ADMIN', 'SUPER_ADMIN'), UserController.deleteUser);
 
+router.patch(
+  '/update-profile',
+  auth('USER', 'ADMIN', 'SUPER_ADMIN'),
+  UserController.updateProfile,
+);
+
 export const UserRoutes = router;

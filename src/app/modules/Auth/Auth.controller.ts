@@ -3,6 +3,8 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status-codes';
 import { AuthService } from './Auth.service';
 import { setAuthCookie } from '../../utils/setCookie';
+import AppError from '../../errorHelpers/AppError';
+import { JwtPayload } from 'jsonwebtoken';
 
 const registerUser = catchAsync(async (req, res) => {
   const result = await AuthService.registerUser(req.body);
@@ -81,6 +83,26 @@ const verifyOTP = catchAsync(async (req, res) => {
   });
 });
 
+const changePassword = catchAsync(async (req, res) => {
+  const { ...passwordData } = req.body;
+
+  if (!req.user) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  await AuthService.changePassword(
+    req.user as JwtPayload as { email: string },
+    passwordData,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password changed successfully!',
+    data: null,
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
@@ -88,4 +110,5 @@ export const AuthController = {
   resetPassword,
   sendOTP,
   verifyOTP,
+  changePassword,
 };

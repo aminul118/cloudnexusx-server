@@ -88,6 +88,11 @@ const deleteUserFromDB = async (id: string) => {
   return result;
 };
 
+const updateProfile = async (email: string, payload: Partial<IUser>) => {
+  const result = await User.findOneAndUpdate({ email }, payload, { new: true });
+  return result;
+};
+
 export const UserService = {
   createUserService,
   getAllUsersFromDB,
@@ -97,4 +102,5 @@ export const UserService = {
   updateUserRole,
   getStatistics,
   deleteUserFromDB,
+  updateProfile,
 };

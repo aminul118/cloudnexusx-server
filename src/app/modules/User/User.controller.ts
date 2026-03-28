@@ -81,6 +81,18 @@ const deleteUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateProfile = catchAsync(async (req, res) => {
+  const { email } = req.user as JwtPayload;
+  const result = await UserService.updateProfile(email, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   createUser,
   getMe,
@@ -89,4 +101,5 @@ export const UserController = {
   updateUserRole,
   getStatistics,
   deleteUser,
+  updateProfile,
 };
