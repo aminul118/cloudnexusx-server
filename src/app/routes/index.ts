@@ -9,6 +9,7 @@ const router = express.Router();
 import { PortfolioRoutes } from '../modules/Portfolio/Portfolio.route';
 import { NotificationRoutes } from '../modules/Notification/Notification.route';
 import { BlogRoutes } from '../modules/Blog/Blog.route';
+import { ServiceRoutes } from '../modules/Service/Service.route';
 
 
 const moduleRoutes: {
@@ -39,7 +40,10 @@ const moduleRoutes: {
     path: '/blogs',
     route: BlogRoutes,
   },
-
+  {
+    path: '/services',
+    route: ServiceRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
