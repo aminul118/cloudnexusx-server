@@ -103,6 +103,32 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
+const refreshToken = catchAsync(async (req, res) => {
+  const token = req.cookies.refreshToken || req.headers.cookie?.split('refreshToken=')[1]?.split(';')[0];
+  
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Refresh token not found');
+  }
+
+  const result = await AuthService.refreshToken(token);
+
+  setAuthCookie(res, { 
+    refreshToken: result.refreshToken, 
+    accessToken: result.accessToken 
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Token refreshed successfully',
+    data: {
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      user: result.user,
+    },
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
@@ -111,4 +137,5 @@ export const AuthController = {
   sendOTP,
   verifyOTP,
   changePassword,
+  refreshToken,
 };

@@ -11,6 +11,7 @@ import { hashPassword } from '@utils/hashPassword';
 
 import { redisClient } from '@config/redis.config';
 import { createUserToken } from '@utils/userTokens';
+import { verifyToken } from '@utils/jwt';
 
 const OTP_EXPIRATION = 5 * 60; // 5 minutes
 
@@ -178,6 +179,35 @@ const changePassword = async (user: { email: string }, payload: IChangePassword)
   return null;
 };
 
+const refreshToken = async (token: string) => {
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  let decoded;
+  try {
+    decoded = verifyToken(token, envVars.JWT_REFRESH_SECRET as string);
+  } catch (_err) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid refresh token');
+  }
+
+  const user = await User.findById(decoded.userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (user.status === 'BLOCKED') {
+    throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
+  }
+
+  const tokens = createUserToken(user);
+
+  return {
+    ...tokens,
+    user,
+  };
+};
+
 export const AuthService = {
   loginUser,
   registerUser,
@@ -186,4 +216,5 @@ export const AuthService = {
   sendOTP,
   verifyOTP,
   changePassword,
+  refreshToken,
 };
