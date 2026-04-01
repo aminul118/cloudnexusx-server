@@ -10,6 +10,7 @@ router.post(
   PortfolioController.createPortfolio,
 );
 router.get('/', PortfolioController.getAllPortfolios);
+router.get('/slug/:slug', PortfolioController.getPortfolioBySlug);
 router.get('/:id', PortfolioController.getSinglePortfolio);
 router.put(
   '/:id',

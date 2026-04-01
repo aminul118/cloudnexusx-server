@@ -49,6 +49,16 @@ const getSinglePortfolio = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPortfolioBySlug = catchAsync(async (req: Request, res: Response) => {
+  const result = await PortfolioService.getSinglePortfolioBySlugFromDB(req.params.slug as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolio retrieved successfully",
+    data: result,
+  });
+});
+
 const updatePortfolio = catchAsync(async (req: Request, res: Response) => {
   const portfolioData = { ...req.body };
 
@@ -88,6 +98,7 @@ export const PortfolioController = {
   createPortfolio,
   getAllPortfolios,
   getSinglePortfolio,
+  getPortfolioBySlug,
   updatePortfolio,
   deletePortfolio,
 };

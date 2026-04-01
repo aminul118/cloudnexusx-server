@@ -29,6 +29,11 @@ const getSinglePortfolioFromDB = async (id: string) => {
   return result;
 };
 
+const getSinglePortfolioBySlugFromDB = async (slug: string) => {
+  const result = await Portfolio.findOne({ slug, isDeleted: false });
+  return result;
+};
+
 const updatePortfolioIntoDB = async (id: string, payload: Partial<IPortfolio>) => {
   const result = await Portfolio.findByIdAndUpdate(id, payload, {
     new: true,
@@ -49,6 +54,7 @@ export const PortfolioService = {
   createPortfolioIntoDB,
   getAllPortfoliosFromDB,
   getSinglePortfolioFromDB,
+  getSinglePortfolioBySlugFromDB,
   updatePortfolioIntoDB,
   deletePortfolioFromDB,
 };
