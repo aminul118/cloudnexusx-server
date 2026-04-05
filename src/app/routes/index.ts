@@ -7,6 +7,7 @@ import { NotificationRoutes } from '../modules/Notification/Notification.route';
 import { BlogRoutes } from '../modules/Blog/Blog.route';
 import { ServiceRoutes } from '../modules/Service/Service.route';
 import { ContactRoutes } from '../modules/Contact/Contact.route';
+import { PartnerRoutes } from '../modules/Partner/Partner.route';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes: Routes[] = [
   {
     path: '/contacts',
     route: ContactRoutes,
+  },
+  {
+    path: '/partners',
+    route: PartnerRoutes,
   },
 ];
 
