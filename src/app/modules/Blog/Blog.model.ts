@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import { IBlog } from './Blog.interface';
-import { slugPlugin } from '../../utils/slugPlugin';
 
 const blogSchema = new Schema<IBlog>(
   {
@@ -25,7 +24,5 @@ const blogSchema = new Schema<IBlog>(
   },
 );
 
-// Apply slug plugin to automatically handle slugs
-blogSchema.plugin(slugPlugin, { sourceField: 'title' });
 
 export const Blog = model<IBlog>('Blog', blogSchema);

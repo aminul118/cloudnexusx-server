@@ -2,21 +2,25 @@ import express from 'express';
 import { PortfolioController } from './Portfolio.controller';
 import { multerUpload } from '../../config/multer.config';
 
+import { makeSlug } from '../../middlewares/makeSlug';
+
 const router = express.Router();
 
 router.post(
   '/create-portfolio',
   multerUpload.single('image'),
+  makeSlug(['title']),
   PortfolioController.createPortfolio,
 );
 router.get('/', PortfolioController.getAllPortfolios);
-router.get('/slug/:slug', PortfolioController.getPortfolioBySlug);
-router.get('/:id', PortfolioController.getSinglePortfolio);
-router.put(
-  '/:id',
+// Standardized slug-based retrieval
+router.get('/:slug', PortfolioController.getPortfolioBySlug);
+router.patch(
+  '/:slug',
   multerUpload.single('image'),
-  PortfolioController.updatePortfolio,
+  makeSlug(['title']),
+  PortfolioController.updatePortfolioBySlug,
 );
-router.delete('/:id', PortfolioController.deletePortfolio);
+router.delete('/:slug', PortfolioController.deletePortfolioBySlug);
 
 export const PortfolioRoutes = router;

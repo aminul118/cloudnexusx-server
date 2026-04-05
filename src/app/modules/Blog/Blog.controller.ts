@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BlogService } from './Blog.service';
 import { JwtPayload } from 'jsonwebtoken';
+import { ImageHandler } from '../../utils/imageHandler';
 
 
 const getAllBlogs = catchAsync(async (req, res) => {
@@ -42,7 +43,13 @@ const getSingleBlogBySlug = catchAsync(async (req, res) => {
 
 
 const createBlog = catchAsync(async (req, res) => {
-  const result = await BlogService.createBlogInDB(req.body, req.user as JwtPayload);
+  const payload = req.body;
+  
+  if (req.file) {
+    payload.featuredImage = await ImageHandler.uploadImage(req.file);
+  }
+
+  const result = await BlogService.createBlogInDB(payload, req.user as JwtPayload);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -52,9 +59,37 @@ const createBlog = catchAsync(async (req, res) => {
   });
 });
 
-const updateBlog = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await BlogService.updateBlogInDB(id as string, req.body);
+const getBlogBySlugForAdmin = catchAsync(async (req, res) => {
+    const { slug } = req.params as { slug: string };
+    const result = await BlogService.getBlogBySlugForAdminFromDB(slug);
+  
+    if (!result) {
+      return sendResponse(res, {
+        statusCode: httpStatus.NOT_FOUND,
+        success: false,
+        message: 'Blog not found',
+        data: null,
+      });
+    }
+  
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Blog details fetched successfully',
+      data: result,
+    });
+  });
+
+
+const updateBlogBySlug = catchAsync(async (req, res) => {
+  const { slug } = req.params;
+  const payload = req.body;
+
+  if (req.file) {
+    payload.featuredImage = await ImageHandler.uploadImage(req.file);
+  }
+
+  const result = await BlogService.updateBlogBySlugFromDB(slug as string, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,9 +99,9 @@ const updateBlog = catchAsync(async (req, res) => {
   });
 });
 
-const deleteBlog = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await BlogService.deleteBlogFromDB(id as string);
+const deleteBlogBySlug = catchAsync(async (req, res) => {
+  const { slug } = req.params;
+  const result = await BlogService.deleteBlogBySlugFromDB(slug as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -80,8 +115,9 @@ const deleteBlog = catchAsync(async (req, res) => {
 export const BlogController = {
   getAllBlogs,
   getSingleBlogBySlug,
+  getBlogBySlugForAdmin,
   createBlog,
-  updateBlog,
-  deleteBlog,
+  updateBlogBySlug,
+  deleteBlogBySlug,
 };
 

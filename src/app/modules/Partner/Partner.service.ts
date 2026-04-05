@@ -11,26 +11,23 @@ const getAllPartnersFromDB = async () => {
   return result;
 };
 
-const getSinglePartnerFromDB = async (id: string) => {
-  const result = await Partner.findById(id);
-  return result;
-};
 
 const getSinglePartnerBySlugFromDB = async (slug: string) => {
   const result = await Partner.findOne({ slug });
   return result;
 };
 
-const updatePartnerInDB = async (id: string, payload: Partial<IPartner>) => {
-  const result = await Partner.findByIdAndUpdate(id, payload, {
+const updatePartnerBySlugInDB = async (slug: string, payload: Partial<IPartner>) => {
+  const result = await Partner.findOneAndUpdate({ slug }, payload, {
     new: true,
+    runValidators: true,
   });
   return result;
 };
 
-const deletePartnerFromDB = async (id: string) => {
-  const result = await Partner.findByIdAndUpdate(
-    id,
+const deletePartnerBySlugFromDB = async (slug: string) => {
+  const result = await Partner.findOneAndUpdate(
+    { slug },
     { isDeleted: true },
     { new: true },
   );
@@ -40,8 +37,7 @@ const deletePartnerFromDB = async (id: string) => {
 export const PartnerService = {
   createPartnerInDB,
   getAllPartnersFromDB,
-  getSinglePartnerFromDB,
   getSinglePartnerBySlugFromDB,
-  updatePartnerInDB,
-  deletePartnerFromDB,
+  updatePartnerBySlugInDB,
+  deletePartnerBySlugFromDB,
 };

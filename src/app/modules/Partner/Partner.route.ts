@@ -4,34 +4,37 @@ import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { PartnerValidation } from './Partner.validation';
 import { multerUpload } from '../../config/multer.config';
+import { makeSlug } from '../../middlewares/makeSlug';
 
 const router = Router();
 
 // Public routes
 router.get('/', PartnerController.getAllPartners);
-router.get('/slug/:slug', PartnerController.getPartnerBySlug);
+router.get('/:slug', PartnerController.getPartnerBySlug);
 
 // Admin/Super Admin protected routes
 router.post(
   '/',
   auth('ADMIN', 'SUPER_ADMIN'),
   multerUpload.single('image'),
+  makeSlug(['name']),
   validateRequest(PartnerValidation.createPartnerValidationSchema),
   PartnerController.createPartner,
 );
 
 router.patch(
-  '/:id',
+  '/:slug',
   auth('ADMIN', 'SUPER_ADMIN'),
   multerUpload.single('image'),
+  makeSlug(['name']),
   validateRequest(PartnerValidation.updatePartnerValidationSchema),
-  PartnerController.updatePartner,
+  PartnerController.updatePartnerBySlug,
 );
 
 router.delete(
-  '/:id',
+  '/:slug',
   auth('ADMIN', 'SUPER_ADMIN'),
-  PartnerController.deletePartner,
+  PartnerController.deletePartnerBySlug,
 );
 
 export const PartnerRoutes = router;

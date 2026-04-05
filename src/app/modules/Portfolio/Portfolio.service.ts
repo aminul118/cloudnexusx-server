@@ -24,26 +24,26 @@ const getAllPortfoliosFromDB = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
-const getSinglePortfolioFromDB = async (id: string) => {
-  const result = await Portfolio.findById(id);
-  return result;
-};
 
 const getSinglePortfolioBySlugFromDB = async (slug: string) => {
   const result = await Portfolio.findOne({ slug, isDeleted: false });
   return result;
 };
 
-const updatePortfolioIntoDB = async (id: string, payload: Partial<IPortfolio>) => {
-  const result = await Portfolio.findByIdAndUpdate(id, payload, {
+const updatePortfolioBySlugFromDB = async (
+  slug: string,
+  payload: Partial<IPortfolio>,
+) => {
+  const result = await Portfolio.findOneAndUpdate({ slug }, payload, {
     new: true,
+    runValidators: true,
   });
   return result;
 };
 
-const deletePortfolioFromDB = async (id: string) => {
-  const result = await Portfolio.findByIdAndUpdate(
-    id,
+const deletePortfolioBySlugFromDB = async (slug: string) => {
+  const result = await Portfolio.findOneAndUpdate(
+    { slug },
     { isDeleted: true },
     { new: true },
   );
@@ -53,8 +53,7 @@ const deletePortfolioFromDB = async (id: string) => {
 export const PortfolioService = {
   createPortfolioIntoDB,
   getAllPortfoliosFromDB,
-  getSinglePortfolioFromDB,
   getSinglePortfolioBySlugFromDB,
-  updatePortfolioIntoDB,
-  deletePortfolioFromDB,
+  updatePortfolioBySlugFromDB,
+  deletePortfolioBySlugFromDB,
 };

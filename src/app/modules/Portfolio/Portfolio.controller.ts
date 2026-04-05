@@ -45,15 +45,6 @@ const getAllPortfolios = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSinglePortfolio = catchAsync(async (req: Request, res: Response) => {
-  const result = await PortfolioService.getSinglePortfolioFromDB(req.params.id as string);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Portfolio retrieved successfully",
-    data: result,
-  });
-});
 
 const getPortfolioBySlug = catchAsync(async (req: Request, res: Response) => {
   const result = await PortfolioService.getSinglePortfolioBySlugFromDB(req.params.slug as string);
@@ -65,7 +56,7 @@ const getPortfolioBySlug = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updatePortfolio = catchAsync(async (req: Request, res: Response) => {
+const updatePortfolioBySlug = catchAsync(async (req: Request, res: Response) => {
   const portfolioData = { ...req.body };
 
   if (req.file) {
@@ -79,12 +70,12 @@ const updatePortfolio = catchAsync(async (req: Request, res: Response) => {
       .filter(Boolean);
   }
 
-  // Normalize isFeatured to Boolean (checkboxes send "on" if checked, missing if unchecked)
+  // Normalize isFeatured to Boolean
   portfolioData.isFeatured =
     portfolioData.isFeatured === 'on' || portfolioData.isFeatured === 'true';
 
-  const result = await PortfolioService.updatePortfolioIntoDB(
-    req.params.id as string,
+  const result = await PortfolioService.updatePortfolioBySlugFromDB(
+    req.params.slug as string,
     portfolioData
   );
   sendResponse(res, {
@@ -95,8 +86,8 @@ const updatePortfolio = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deletePortfolio = catchAsync(async (req: Request, res: Response) => {
-  const result = await PortfolioService.deletePortfolioFromDB(req.params.id as string);
+const deletePortfolioBySlug = catchAsync(async (req: Request, res: Response) => {
+  const result = await PortfolioService.deletePortfolioBySlugFromDB(req.params.slug as string);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -108,8 +99,7 @@ const deletePortfolio = catchAsync(async (req: Request, res: Response) => {
 export const PortfolioController = {
   createPortfolio,
   getAllPortfolios,
-  getSinglePortfolio,
   getPortfolioBySlug,
-  updatePortfolio,
-  deletePortfolio,
+  updatePortfolioBySlug,
+  deletePortfolioBySlug,
 };

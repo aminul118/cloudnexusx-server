@@ -24,27 +24,27 @@ const getAllServicesFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const getSingleServiceFromDB = async (id: string) => {
-  const result = await Service.findById(id);
-  return result;
-};
 
 const getSingleServiceBySlugFromDB = async (slug: string) => {
   const result = await Service.findOne({ slug });
   return result;
 };
 
-const updateServiceIntoDB = async (id: string, payload: Partial<IService>) => {
-  const result = await Service.findByIdAndUpdate(id, payload, {
+
+const updateServiceBySlugFromDB = async (
+  slug: string,
+  payload: Partial<IService>,
+) => {
+  const result = await Service.findOneAndUpdate({ slug }, payload, {
     new: true,
     runValidators: true,
   });
   return result;
 };
 
-const deleteServiceFromDB = async (id: string) => {
-  const result = await Service.findByIdAndUpdate(
-    id,
+const deleteServiceBySlugFromDB = async (slug: string) => {
+  const result = await Service.findOneAndUpdate(
+    { slug },
     { isDeleted: true },
     { new: true },
   );
@@ -54,8 +54,7 @@ const deleteServiceFromDB = async (id: string) => {
 export const ServiceServices = {
   createServiceIntoDB,
   getAllServicesFromDB,
-  getSingleServiceFromDB,
   getSingleServiceBySlugFromDB,
-  updateServiceIntoDB,
-  deleteServiceFromDB,
+  updateServiceBySlugFromDB,
+  deleteServiceBySlugFromDB,
 };

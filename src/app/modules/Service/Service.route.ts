@@ -3,33 +3,45 @@ import validateRequest from '../../middlewares/validateRequest';
 import { ServiceValidations } from './Service.validation';
 import { ServiceControllers } from './Service.controller';
 import auth from '../../middlewares/auth';
+import { multerUpload } from '../../config/multer.config';
+import { makeSlug } from '../../middlewares/makeSlug';
 
 const router = express.Router();
 
 router.get('/', ServiceControllers.getAllServices);
 
-router.get('/:id', ServiceControllers.getSingleService);
 
 router.get('/slug/:slug', ServiceControllers.getSingleServiceBySlug);
 
 router.post(
   '/',
   auth('ADMIN', 'SUPER_ADMIN'),
+  multerUpload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'icon', maxCount: 1 },
+  ]),
+  makeSlug(['title']),
   validateRequest(ServiceValidations.createServiceValidationSchema),
   ServiceControllers.createService,
 );
 
+
 router.patch(
-  '/:id',
+  '/slug/:slug',
   auth('ADMIN', 'SUPER_ADMIN'),
+  multerUpload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'icon', maxCount: 1 },
+  ]),
+  makeSlug(['title']),
   validateRequest(ServiceValidations.updateServiceValidationSchema),
-  ServiceControllers.updateService,
+  ServiceControllers.updateServiceBySlug,
 );
 
 router.delete(
-  '/:id',
+  '/slug/:slug',
   auth('ADMIN', 'SUPER_ADMIN'),
-  ServiceControllers.deleteService,
+  ServiceControllers.deleteServiceBySlug,
 );
 
 export const ServiceRoutes = router;

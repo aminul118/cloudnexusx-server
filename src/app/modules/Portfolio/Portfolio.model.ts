@@ -1,7 +1,5 @@
 import { Schema, model } from 'mongoose';
 import { IPortfolio } from './Portfolio.interface';
-import { slugPlugin } from '../../utils/slugPlugin';
-
 
 const portfolioSchema = new Schema<IPortfolio>(
   {
@@ -20,8 +18,4 @@ const portfolioSchema = new Schema<IPortfolio>(
   },
 );
 
-// Apply slug plugin
-portfolioSchema.plugin(slugPlugin, { sourceField: 'title' });
-
 export const Portfolio = model<IPortfolio>('Portfolio', portfolioSchema);
-

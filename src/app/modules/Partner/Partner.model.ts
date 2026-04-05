@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import { IPartner } from './Partner.interface';
-import { slugPlugin } from '../../utils/slugPlugin';
 
 const partnerSchema = new Schema<IPartner>(
   {
@@ -16,8 +15,6 @@ const partnerSchema = new Schema<IPartner>(
   },
 );
 
-// Apply slug plugin
-partnerSchema.plugin(slugPlugin, { sourceField: 'name' });
 
 // Filter out deleted partners by default
 partnerSchema.pre('find', function (next) {

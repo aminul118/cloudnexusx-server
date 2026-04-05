@@ -37,6 +37,13 @@ const getSingleBlogBySlugFromDB = async (slug: string) => {
   return result;
 };
 
+const getBlogBySlugForAdminFromDB = async (slug: string) => {
+  return await Blog.findOne({ slug, isDeleted: false }).populate(
+    'author',
+    'name email picture designation',
+  );
+};
+
 
 
 const createBlogInDB = async (payload: IBlog, user: JwtPayload) => {
@@ -45,17 +52,21 @@ const createBlogInDB = async (payload: IBlog, user: JwtPayload) => {
   return await Blog.create(payload);
 };
 
-const updateBlogInDB = async (id: string, payload: Partial<IBlog>) => {
-  return await Blog.findByIdAndUpdate(id, payload, {
+
+const updateBlogBySlugFromDB = async (
+  slug: string,
+  payload: Partial<IBlog>,
+) => {
+  return await Blog.findOneAndUpdate({ slug, isDeleted: false }, payload, {
     new: true,
     runValidators: true,
   });
 };
 
-const deleteBlogFromDB = async (id: string) => {
+const deleteBlogBySlugFromDB = async (slug: string) => {
   // Soft deletion
-  return await Blog.findByIdAndUpdate(
-    id,
+  return await Blog.findOneAndUpdate(
+    { slug, isDeleted: false },
     { isDeleted: true },
     { new: true },
   );
@@ -64,8 +75,9 @@ const deleteBlogFromDB = async (id: string) => {
 export const BlogService = {
   getAllBlogsFromDB,
   getSingleBlogBySlugFromDB,
+  getBlogBySlugForAdminFromDB,
   createBlogInDB,
-  updateBlogInDB,
-  deleteBlogFromDB,
+  updateBlogBySlugFromDB,
+  deleteBlogBySlugFromDB,
 };
 

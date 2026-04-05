@@ -2,9 +2,23 @@ import { Request, Response } from 'express';
 import { ServiceServices } from './Service.service';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
+import { ImageHandler } from '../../utils/imageHandler';
 
 const createService = catchAsync(async (req: Request, res: Response) => {
-  const result = await ServiceServices.createServiceIntoDB(req.body);
+  const payload = req.body;
+
+  // Optimized image processing
+  if (req.files) {
+    const files = req.files as Record<string, Express.Multer.File[]>;
+    if (files.image?.[0]) {
+      payload.image = await ImageHandler.uploadImage(files.image[0]);
+    }
+    if (files.icon?.[0]) {
+      payload.icon = await ImageHandler.uploadImage(files.icon[0]);
+    }
+  }
+
+  const result = await ServiceServices.createServiceIntoDB(payload);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -26,16 +40,6 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSingleService = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await ServiceServices.getSingleServiceFromDB(id as string);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Service fetched successfully',
-    data: result,
-  });
-});
 
 const getSingleServiceBySlug = catchAsync(
   async (req: Request, res: Response) => {
@@ -52,11 +56,25 @@ const getSingleServiceBySlug = catchAsync(
   },
 );
 
-const updateService = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await ServiceServices.updateServiceIntoDB(
-    id as string,
-    req.body,
+
+const updateServiceBySlug = catchAsync(async (req: Request, res: Response) => {
+  const { slug } = req.params;
+  const payload = req.body;
+
+  // Optimized image processing
+  if (req.files) {
+    const files = req.files as Record<string, Express.Multer.File[]>;
+    if (files.image?.[0]) {
+      payload.image = await ImageHandler.uploadImage(files.image[0]);
+    }
+    if (files.icon?.[0]) {
+      payload.icon = await ImageHandler.uploadImage(files.icon[0]);
+    }
+  }
+
+  const result = await ServiceServices.updateServiceBySlugFromDB(
+    slug as string,
+    payload,
   );
   sendResponse(res, {
     statusCode: 200,
@@ -66,9 +84,9 @@ const updateService = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteService = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await ServiceServices.deleteServiceFromDB(id as string);
+const deleteServiceBySlug = catchAsync(async (req: Request, res: Response) => {
+  const { slug } = req.params;
+  const result = await ServiceServices.deleteServiceBySlugFromDB(slug as string);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -80,8 +98,7 @@ const deleteService = catchAsync(async (req: Request, res: Response) => {
 export const ServiceControllers = {
   createService,
   getAllServices,
-  getSingleService,
   getSingleServiceBySlug,
-  updateService,
-  deleteService,
+  updateServiceBySlug,
+  deleteServiceBySlug,
 };
