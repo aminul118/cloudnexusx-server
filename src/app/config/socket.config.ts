@@ -12,7 +12,12 @@ let io: Server;
 export const initSocket = (server: HttpServer) => {
   io = new Server(server, {
     cors: {
-      origin: ['http://localhost:3000', 'http://localhost:5173'],
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'https://rangdhanuit.com',
+        'https://www.rangdhanuit.com',
+      ],
       credentials: true,
     },
   });
@@ -30,7 +35,9 @@ export const initSocket = (server: HttpServer) => {
 
       // 2. Fallback to auth.token (for non-browser clients)
       if (!accessToken) {
-        const raw = socket.handshake.auth?.token || socket.handshake.headers?.authorization;
+        const raw =
+          socket.handshake.auth?.token ||
+          socket.handshake.headers?.authorization;
         if (raw) {
           accessToken = raw.startsWith('Bearer ') ? raw.split(' ')[1] : raw;
         }

@@ -14,6 +14,7 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
+      domain: isProduction ? '.rangdhanuit.com' : undefined,
       path: '/',
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
@@ -24,6 +25,7 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
+      domain: isProduction ? '.rangdhanuit.com' : undefined,
       path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
     });

@@ -1,7 +1,12 @@
 import { CorsOptions } from 'cors';
 import envVars from './env';
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://rangdhanuit.com',
+  'https://www.rangdhanuit.com',
+];
 
 if (envVars.FRONTEND_URL) {
   const envOrigins = envVars.FRONTEND_URL.split(',').map((url) => url.trim());

@@ -8,6 +8,8 @@ import { BlogRoutes } from '../modules/Blog/Blog.route';
 import { ServiceRoutes } from '../modules/Service/Service.route';
 import { ContactRoutes } from '../modules/Contact/Contact.route';
 import { PartnerRoutes } from '../modules/Partner/Partner.route';
+import { QuotationRoutes } from '../modules/Quotation/Quotation.route';
+import { InvoiceRoutes } from '../modules/Invoice/Invoice.route';
 
 const router = Router();
 
@@ -52,6 +54,14 @@ const moduleRoutes: Routes[] = [
   {
     path: '/partners',
     route: PartnerRoutes,
+  },
+  {
+    path: '/quotations',
+    route: QuotationRoutes,
+  },
+  {
+    path: '/invoices',
+    route: InvoiceRoutes,
   },
 ];
 

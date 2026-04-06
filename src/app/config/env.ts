@@ -16,15 +16,15 @@ dotenv.config({ path: envPath });
 export const envFile = envPath;
 
 const envVars = {
-  PORT: getEnv('PORT', '5000'),
+  PORT: getEnv('PORT'),
   DB_URL: getEnv('DB_URL'),
-  NODE_ENV: getEnv('NODE_ENV', 'development'),
+  NODE_ENV: getEnv('NODE_ENV'),
   JWT_ACCESS_SECRET: getEnv('JWT_ACCESS_SECRET'),
-  JWT_ACCESS_EXPIRES: getEnv('JWT_ACCESS_EXPIRES', '1d'),
+  JWT_ACCESS_EXPIRES: getEnv('JWT_ACCESS_EXPIRES'),
   JWT_REFRESH_SECRET: getEnv('JWT_REFRESH_SECRET'),
-  JWT_REFRESH_EXPIRES: getEnv('JWT_REFRESH_EXPIRES', '30d'),
-  BCRYPT_SALT_ROUND: Number(getEnv('BCRYPT_SALT_ROUND', '10')),
-  FRONTEND_URL: getEnv('FRONTEND_URL', 'http://localhost:3000'),
+  JWT_REFRESH_EXPIRES: getEnv('JWT_REFRESH_EXPIRES'),
+  BCRYPT_SALT_ROUND: Number(getEnv('BCRYPT_SALT_ROUND')),
+  FRONTEND_URL: getEnv('FRONTEND_URL'),
   SUPER_ADMIN: {
     NAME: getEnv('SUPER_ADMIN_NAME'),
     EMAIL: getEnv('SUPER_ADMIN_EMAIL'),
