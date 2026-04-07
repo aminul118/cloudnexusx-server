@@ -1,7 +1,5 @@
-import { hashPassword } from './hashPassword';
 import logger from './logger';
 import envVars from '../config/env';
-
 
 import { User } from '../modules/User/User.model';
 
@@ -21,24 +19,36 @@ const seedSuperAdmin = async () => {
       return;
     }
 
-    const isSuperAdminExist = await User.findOne({ email: EMAIL });
+    const isSuperAdminExist = await User.findOne({ email: EMAIL }).select(
+      '+password',
+    );
 
     if (isSuperAdminExist) {
-      logger.log('ℹ️  Super admin already exists');
+      const isPasswordMatched = await User.isPasswordMatched(
+        PASSWORD,
+        isSuperAdminExist.password,
+      );
+
+      if (!isPasswordMatched) {
+        logger.log(
+          'ℹ️  Super admin exists but password does not match. Updating password...',
+        );
+        isSuperAdminExist.password = PASSWORD;
+        await isSuperAdminExist.save();
+        logger.log('✅ Super Admin password updated successfully');
+      } else {
+        logger.log('ℹ️  Super admin already exists and password matches');
+      }
 
       return;
     }
 
     logger.log('🚀 Initiating Super Admin seeding...');
 
-
-    const hashedPassword = await hashPassword(PASSWORD);
-
-
     const payload = {
       name: NAME || 'Super Admin',
       email: EMAIL,
-      password: hashedPassword,
+      password: PASSWORD,
       role: 'SUPER_ADMIN',
       status: 'ACTIVE',
       isVerified: true,
@@ -47,11 +57,9 @@ const seedSuperAdmin = async () => {
 
     const superAdmin = await User.create(payload);
     logger.log('✅ Super Admin created successfully:', superAdmin.email);
-
   } catch (error) {
     logger.error('❌ Error seeding Super Admin:', error);
   }
-
 };
 
 export default seedSuperAdmin;

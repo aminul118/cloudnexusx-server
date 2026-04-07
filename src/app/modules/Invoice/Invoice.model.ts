@@ -13,7 +13,10 @@ const invoiceSchema = new Schema<IInvoice, InvoiceModel>(
     quotationId: { type: Schema.Types.ObjectId, ref: 'Quotation' },
     clientName: { type: String, required: true },
     clientEmail: { type: String },
+    clientPhone: { type: String, required: true },
     clientAddress: { type: String },
+    projectStartTime: { type: Date },
+    projectApproximateFinishTime: { type: Date },
     invoiceNumber: { type: String, required: true, unique: true },
     issueDate: { type: Date, required: true },
     dueDate: { type: Date, required: true },
@@ -32,11 +35,11 @@ const invoiceSchema = new Schema<IInvoice, InvoiceModel>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Auto-generate invoice number if not provided before save
-invoiceSchema.pre('validate', function(next) {
+invoiceSchema.pre('validate', function (next) {
   if (!this.invoiceNumber) {
     this.invoiceNumber = `INV-${Date.now()}`;
   }

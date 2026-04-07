@@ -11,6 +11,7 @@ export interface IQuotation {
   clientName: string;
   clientAddress: string;
   clientEmail?: string;
+  clientPhone: string;
   projectName: string;
   description: string;
   deliverables: string;
@@ -28,4 +29,4 @@ export interface IQuotation {
 }
 
 export type QuotationDocument = IQuotation & Document;
-export interface QuotationModel extends Model<IQuotation> {}
+export type QuotationModel = Model<IQuotation>;

@@ -13,7 +13,10 @@ export interface IInvoice {
   quotationId?: Types.ObjectId;
   clientName: string;
   clientEmail?: string;
+  clientPhone: string;
   clientAddress?: string;
+  projectStartTime?: Date;
+  projectApproximateFinishTime?: Date;
   invoiceNumber: string;
   issueDate: Date;
   dueDate: Date;
@@ -28,4 +31,4 @@ export interface IInvoice {
 }
 
 export type InvoiceDocument = IInvoice & Document;
-export interface InvoiceModel extends Model<IInvoice> {}
+export type InvoiceModel = Model<IInvoice>;
