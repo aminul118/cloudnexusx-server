@@ -27,7 +27,11 @@ const deleteFileFromCloudinary = async (url: string) => {
       resource_type: resourceType,
     });
   } catch (error: any) {
-    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Cloudinary deletion failed', error.message);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Cloudinary deletion failed',
+      error.message,
+    );
   }
 };
 

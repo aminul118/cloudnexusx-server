@@ -8,7 +8,6 @@ import sendEmail from '@utils/sendEmail';
 import crypto from 'crypto';
 import { hashPassword } from '@utils/hashPassword';
 
-
 import { redisClient } from '@config/redis.config';
 import { createUserToken } from '@utils/userTokens';
 import { verifyToken } from '@utils/jwt';
@@ -52,10 +51,7 @@ const loginUser = async (payload: ILoginUser) => {
   if (!user.isVerified) {
     // Send new OTP
     await AuthService.sendOTP(user.email);
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      'USER_NOT_VERIFIED',
-    );
+    throw new AppError(httpStatus.FORBIDDEN, 'USER_NOT_VERIFIED');
   }
 
   const tokens = createUserToken(user);
@@ -103,7 +99,6 @@ const resetPassword = async (payload: IResetPassword) => {
   // Ideally, store the hash in DB or Redis.
 
   const hashedPassword = await hashPassword(payload.newPassword);
-
 
   await User.updateOne({ email: payload.email }, { password: hashedPassword });
 
@@ -154,7 +149,10 @@ const verifyOTP = async (email: string, otp: string) => {
   };
 };
 
-const changePassword = async (user: { email: string }, payload: IChangePassword) => {
+const changePassword = async (
+  user: { email: string },
+  payload: IChangePassword,
+) => {
   const userData = await User.findOne({ email: user.email }).select(
     '+password',
   );
@@ -172,7 +170,6 @@ const changePassword = async (user: { email: string }, payload: IChangePassword)
   }
 
   const hashedPassword = await hashPassword(payload.newPassword);
-
 
   await User.updateOne({ email: user.email }, { password: hashedPassword });
 

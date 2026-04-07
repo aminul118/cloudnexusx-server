@@ -11,13 +11,15 @@ const getAllPartnersFromDB = async () => {
   return result;
 };
 
-
 const getSinglePartnerBySlugFromDB = async (slug: string) => {
   const result = await Partner.findOne({ slug });
   return result;
 };
 
-const updatePartnerBySlugInDB = async (slug: string, payload: Partial<IPartner>) => {
+const updatePartnerBySlugInDB = async (
+  slug: string,
+  payload: Partial<IPartner>,
+) => {
   const result = await Partner.findOneAndUpdate({ slug }, payload, {
     new: true,
     runValidators: true,

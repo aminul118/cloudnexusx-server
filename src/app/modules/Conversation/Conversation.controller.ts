@@ -13,20 +13,27 @@ const getMyConversations = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getConversationMessages = catchAsync(async (req: Request, res: Response) => {
-  const { conversationId } = req.params;
-  const result = await ConversationService.getConversationMessages(conversationId as string);
-  res.status(httpStatus.OK).json({
-    success: true,
-    message: 'Messages fetched successfully',
-    data: result,
-  });
-});
+const getConversationMessages = catchAsync(
+  async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const result = await ConversationService.getConversationMessages(
+      conversationId as string,
+    );
+    res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Messages fetched successfully',
+      data: result,
+    });
+  },
+);
 
 const markAsRead = catchAsync(async (req: Request, res: Response) => {
   const { conversationId } = req.params;
   const userId = (req.user as any).userId;
-  const result = await ConversationService.markAsRead(conversationId as string, userId);
+  const result = await ConversationService.markAsRead(
+    conversationId as string,
+    userId,
+  );
   res.status(httpStatus.OK).json({
     success: true,
     message: 'Conversation marked as read',
@@ -37,7 +44,11 @@ const markAsRead = catchAsync(async (req: Request, res: Response) => {
 const sendMessage = catchAsync(async (req: Request, res: Response) => {
   const senderId = (req.user as any).userId;
   const { recipientId, content } = req.body;
-  const result = await ConversationService.sendMessage(senderId, recipientId, content);
+  const result = await ConversationService.sendMessage(
+    senderId,
+    recipientId,
+    content,
+  );
 
   res.status(httpStatus.CREATED).json({
     success: true,

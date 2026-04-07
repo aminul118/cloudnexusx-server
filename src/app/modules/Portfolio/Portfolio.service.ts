@@ -24,7 +24,6 @@ const getAllPortfoliosFromDB = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
-
 const getSinglePortfolioBySlugFromDB = async (slug: string) => {
   const result = await Portfolio.findOne({ slug, isDeleted: false });
   return result;

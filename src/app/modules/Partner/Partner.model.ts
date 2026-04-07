@@ -14,5 +14,4 @@ const partnerSchema = new Schema<IPartner>(
   },
 );
 
-
 export const Partner = model<IPartner>('Partner', partnerSchema);

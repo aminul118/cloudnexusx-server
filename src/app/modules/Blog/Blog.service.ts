@@ -3,8 +3,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Blog } from './Blog.model';
 
-
-
 const getAllBlogsFromDB = async (query: Record<string, unknown>) => {
   const blogQuery = new QueryBuilder(
     Blog.find({ isDeleted: false }).populate(
@@ -25,7 +23,6 @@ const getAllBlogsFromDB = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
-
 const getSingleBlogBySlugFromDB = async (slug: string) => {
   // Update view count and fetch
   const result = await Blog.findOneAndUpdate(
@@ -44,14 +41,11 @@ const getBlogBySlugForAdminFromDB = async (slug: string) => {
   );
 };
 
-
-
 const createBlogInDB = async (payload: IBlog, user: JwtPayload) => {
   // Assign current user as author
   payload.author = user._id; // _id is typically used in the project
   return await Blog.create(payload);
 };
-
 
 const updateBlogBySlugFromDB = async (
   slug: string,
@@ -80,4 +74,3 @@ export const BlogService = {
   updateBlogBySlugFromDB,
   deleteBlogBySlugFromDB,
 };
-

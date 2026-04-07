@@ -40,7 +40,6 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 const getSingleServiceBySlug = catchAsync(
   async (req: Request, res: Response) => {
     const { slug } = req.params;
@@ -55,7 +54,6 @@ const getSingleServiceBySlug = catchAsync(
     });
   },
 );
-
 
 const updateServiceBySlug = catchAsync(async (req: Request, res: Response) => {
   const { slug } = req.params;
@@ -86,7 +84,9 @@ const updateServiceBySlug = catchAsync(async (req: Request, res: Response) => {
 
 const deleteServiceBySlug = catchAsync(async (req: Request, res: Response) => {
   const { slug } = req.params;
-  const result = await ServiceServices.deleteServiceBySlugFromDB(slug as string);
+  const result = await ServiceServices.deleteServiceBySlugFromDB(
+    slug as string,
+  );
   sendResponse(res, {
     statusCode: 200,
     success: true,

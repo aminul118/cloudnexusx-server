@@ -104,17 +104,19 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const refreshToken = catchAsync(async (req, res) => {
-  const token = req.cookies.refreshToken || req.headers.cookie?.split('refreshToken=')[1]?.split(';')[0];
-  
+  const token =
+    req.cookies.refreshToken ||
+    req.headers.cookie?.split('refreshToken=')[1]?.split(';')[0];
+
   if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Refresh token not found');
   }
 
   const result = await AuthService.refreshToken(token);
 
-  setAuthCookie(res, { 
-    refreshToken: result.refreshToken, 
-    accessToken: result.accessToken 
+  setAuthCookie(res, {
+    refreshToken: result.refreshToken,
+    accessToken: result.accessToken,
   });
 
   sendResponse(res, {

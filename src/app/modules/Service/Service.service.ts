@@ -24,12 +24,10 @@ const getAllServicesFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-
 const getSingleServiceBySlugFromDB = async (slug: string) => {
   const result = await Service.findOne({ slug });
   return result;
 };
-
 
 const updateServiceBySlugFromDB = async (
   slug: string,

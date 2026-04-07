@@ -5,7 +5,9 @@ import sendResponse from '../../utils/sendResponse';
 import { NotificationService } from './Notification.service';
 
 const getMyNotifications = catchAsync(async (req, res) => {
-  const result = await NotificationService.getMyNotifications((req.user as JwtPayload).userId);
+  const result = await NotificationService.getMyNotifications(
+    (req.user as JwtPayload).userId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -16,7 +18,9 @@ const getMyNotifications = catchAsync(async (req, res) => {
 });
 
 const markAllAsRead = catchAsync(async (req, res) => {
-  const result = await NotificationService.markAllAsRead((req.user as JwtPayload).userId);
+  const result = await NotificationService.markAllAsRead(
+    (req.user as JwtPayload).userId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -27,7 +31,9 @@ const markAllAsRead = catchAsync(async (req, res) => {
 });
 
 const markSpecificAsRead = catchAsync(async (req, res) => {
-  const result = await NotificationService.markSpecificAsRead(req.params.id as string);
+  const result = await NotificationService.markSpecificAsRead(
+    req.params.id as string,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -38,7 +44,9 @@ const markSpecificAsRead = catchAsync(async (req, res) => {
 });
 
 const deleteSpecificNotification = catchAsync(async (req, res) => {
-  const result = await NotificationService.deleteSpecificNotification(req.params.id as string);
+  const result = await NotificationService.deleteSpecificNotification(
+    req.params.id as string,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -49,7 +57,9 @@ const deleteSpecificNotification = catchAsync(async (req, res) => {
 });
 
 const deleteAllNotifications = catchAsync(async (req, res) => {
-  const result = await NotificationService.deleteAllNotifications((req.user as JwtPayload).userId);
+  const result = await NotificationService.deleteAllNotifications(
+    (req.user as JwtPayload).userId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

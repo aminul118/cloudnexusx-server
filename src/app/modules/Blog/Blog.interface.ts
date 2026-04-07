@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
 
-
 export interface IBlog {
   title: string;
   slug: string;
@@ -13,6 +12,3 @@ export interface IBlog {
   status: 'DRAFT' | 'PUBLISHED';
   isDeleted: boolean;
 }
-
-
-

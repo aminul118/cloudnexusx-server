@@ -10,7 +10,7 @@ const contactSchema = new Schema<IContact>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Contact = model<IContact, ContactModel>('Contact', contactSchema);

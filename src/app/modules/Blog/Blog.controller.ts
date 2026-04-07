@@ -5,7 +5,6 @@ import { BlogService } from './Blog.service';
 import { JwtPayload } from 'jsonwebtoken';
 import { ImageHandler } from '../../utils/imageHandler';
 
-
 const getAllBlogs = catchAsync(async (req, res) => {
   const { result, meta } = await BlogService.getAllBlogsFromDB(req.query);
   sendResponse(res, {
@@ -17,12 +16,10 @@ const getAllBlogs = catchAsync(async (req, res) => {
   });
 });
 
-
 const getSingleBlogBySlug = catchAsync(async (req, res) => {
   const { slug } = req.params as { slug: string };
   const result = await BlogService.getSingleBlogBySlugFromDB(slug);
 
-  
   if (!result) {
     return sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
@@ -40,16 +37,17 @@ const getSingleBlogBySlug = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const createBlog = catchAsync(async (req, res) => {
   const payload = req.body;
-  
+
   if (req.file) {
     payload.featuredImage = await ImageHandler.uploadImage(req.file);
   }
 
-  const result = await BlogService.createBlogInDB(payload, req.user as JwtPayload);
+  const result = await BlogService.createBlogInDB(
+    payload,
+    req.user as JwtPayload,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -60,26 +58,25 @@ const createBlog = catchAsync(async (req, res) => {
 });
 
 const getBlogBySlugForAdmin = catchAsync(async (req, res) => {
-    const { slug } = req.params as { slug: string };
-    const result = await BlogService.getBlogBySlugForAdminFromDB(slug);
-  
-    if (!result) {
-      return sendResponse(res, {
-        statusCode: httpStatus.NOT_FOUND,
-        success: false,
-        message: 'Blog not found',
-        data: null,
-      });
-    }
-  
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Blog details fetched successfully',
-      data: result,
-    });
-  });
+  const { slug } = req.params as { slug: string };
+  const result = await BlogService.getBlogBySlugForAdminFromDB(slug);
 
+  if (!result) {
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'Blog not found',
+      data: null,
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog details fetched successfully',
+    data: result,
+  });
+});
 
 const updateBlogBySlug = catchAsync(async (req, res) => {
   const { slug } = req.params;
@@ -89,7 +86,10 @@ const updateBlogBySlug = catchAsync(async (req, res) => {
     payload.featuredImage = await ImageHandler.uploadImage(req.file);
   }
 
-  const result = await BlogService.updateBlogBySlugFromDB(slug as string, payload);
+  const result = await BlogService.updateBlogBySlugFromDB(
+    slug as string,
+    payload,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -111,7 +111,6 @@ const deleteBlogBySlug = catchAsync(async (req, res) => {
   });
 });
 
-
 export const BlogController = {
   getAllBlogs,
   getSingleBlogBySlug,
@@ -120,4 +119,3 @@ export const BlogController = {
   updateBlogBySlug,
   deleteBlogBySlug,
 };
-

@@ -10,7 +10,6 @@ const router = express.Router();
 
 router.get('/', ServiceControllers.getAllServices);
 
-
 router.get('/slug/:slug', ServiceControllers.getSingleServiceBySlug);
 
 router.post(
@@ -24,7 +23,6 @@ router.post(
   validateRequest(ServiceValidations.createServiceValidationSchema),
   ServiceControllers.createService,
 );
-
 
 router.patch(
   '/slug/:slug',

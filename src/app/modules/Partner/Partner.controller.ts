@@ -8,7 +8,10 @@ const createPartner = catchAsync(async (req, res) => {
   const file = req.file;
 
   if (file) {
-    req.body.logo = await ImageHandler.uploadImage(file as Express.Multer.File, 'partners');
+    req.body.logo = await ImageHandler.uploadImage(
+      file as Express.Multer.File,
+      'partners',
+    );
   }
 
   const result = await PartnerService.createPartnerInDB(req.body);
@@ -34,7 +37,9 @@ const getAllPartners = catchAsync(async (req, res) => {
 
 const getPartnerBySlug = catchAsync(async (req, res) => {
   const { slug } = req.params;
-  const result = await PartnerService.getSinglePartnerBySlugFromDB(slug as string);
+  const result = await PartnerService.getSinglePartnerBySlugFromDB(
+    slug as string,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -49,10 +54,16 @@ const updatePartnerBySlug = catchAsync(async (req, res) => {
   const file = req.file;
 
   if (file) {
-    req.body.logo = await ImageHandler.uploadImage(file as Express.Multer.File, 'partners');
+    req.body.logo = await ImageHandler.uploadImage(
+      file as Express.Multer.File,
+      'partners',
+    );
   }
 
-  const result = await PartnerService.updatePartnerBySlugInDB(slug as string, req.body);
+  const result = await PartnerService.updatePartnerBySlugInDB(
+    slug as string,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

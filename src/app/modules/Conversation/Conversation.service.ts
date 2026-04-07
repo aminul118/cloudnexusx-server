@@ -30,7 +30,11 @@ const getConversationMessages = async (conversationId: string) => {
   return result;
 };
 
-const sendMessage = async (senderId: string, recipientId: string, content: string) => {
+const sendMessage = async (
+  senderId: string,
+  recipientId: string,
+  content: string,
+) => {
   // 1. Find or create conversation
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, recipientId] },
@@ -72,10 +76,13 @@ const markAsRead = async (conversationId: string, userId: string) => {
     conversation.unreadCount.set(userId, 0);
     await conversation.save();
   }
-  
+
   await Message.updateMany(
-    { conversationId: new Types.ObjectId(conversationId), sender: { $ne: new Types.ObjectId(userId) } },
-    { isRead: true }
+    {
+      conversationId: new Types.ObjectId(conversationId),
+      sender: { $ne: new Types.ObjectId(userId) },
+    },
+    { isRead: true },
   );
 
   return conversation;

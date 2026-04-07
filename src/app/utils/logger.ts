@@ -41,7 +41,6 @@ const logger = {
       console.info(...args);
     }
   },
-
 };
 
 export default logger;

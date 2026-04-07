@@ -17,7 +17,6 @@ const serviceSchema = new Schema<IService, ServiceModel>(
   },
 );
 
-
 // Query middleware to exclude deleted documents
 serviceSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });

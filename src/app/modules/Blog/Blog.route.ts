@@ -27,7 +27,6 @@ router.post(
   BlogController.createBlog,
 );
 
-
 router.patch(
   '/slug/:slug',
   auth('ADMIN', 'SUPER_ADMIN'),
@@ -44,4 +43,3 @@ router.delete(
 );
 
 export const BlogRoutes = router;
-

@@ -9,11 +9,19 @@ export const ImageHandler = {
    * Processes a file buffer with Sharp and uploads it to Cloudinary.
    * Target: Optimization, auto-format (mostly WebP), and quality compression.
    */
-  async uploadImage(file: Express.Multer.File, folder = 'rangdhanu'): Promise<string> {
+  async uploadImage(
+    file: Express.Multer.File,
+    folder = 'rangdhanu',
+  ): Promise<string> {
     // 1. Process image with Sharp
     // We convert to WebP or optimize JPEG depending on input, ensuring ~80% quality
     const optimizedBuffer = await sharp(file.buffer)
-      .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true }) // Responsive cap
+      .resize({
+        width: 1200,
+        height: 1200,
+        fit: 'inside',
+        withoutEnlargement: true,
+      }) // Responsive cap
       .webp({ quality: 80 }) // High performance WebP conversion
       .toBuffer();
 
@@ -23,13 +31,13 @@ export const ImageHandler = {
         {
           folder,
           resource_type: 'image',
-          public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, "").replace(/\s+/g, "-")}`,
+          public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, '').replace(/\s+/g, '-')}`,
         },
         (error, result) => {
           if (error) return reject(error);
           if (!result) return reject(new Error('Cloudinary upload failed'));
           resolve(result.secure_url);
-        }
+        },
       );
 
       uploadStream.end(optimizedBuffer);

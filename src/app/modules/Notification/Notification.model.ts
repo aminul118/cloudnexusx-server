@@ -37,4 +37,7 @@ const notificationSchema = new Schema<INotification>(
   },
 );
 
-export const Notification = model<INotification>('Notification', notificationSchema);
+export const Notification = model<INotification>(
+  'Notification',
+  notificationSchema,
+);

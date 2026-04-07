@@ -15,11 +15,13 @@ export interface IUser {
   slug?: string;
 }
 
-
 export type UserRole = 'ADMIN' | 'USER' | 'SUPER_ADMIN';
 export type UserStatus = 'ACTIVE' | 'BLOCKED';
 
 export interface UserModel extends Model<IUser> {
   isUserExistsByEmail(email: string): Promise<IUser | null>;
-  isPasswordMatched(plainPassword: string, hashedPassword: string): Promise<boolean>;
+  isPasswordMatched(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean>;
 }

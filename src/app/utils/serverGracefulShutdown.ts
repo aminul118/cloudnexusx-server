@@ -1,11 +1,9 @@
 import { Server } from 'http';
 import logger from './logger';
 
-
 const serverGracefulShutdown = (server: Server) => {
   const shutdown = (reason: string, err?: unknown) => {
     logger.log(`⚠️  ${reason} --> Server shutting down gracefully.`, err || '');
-
 
     if (server) {
       server.close(() => {
@@ -20,8 +18,12 @@ const serverGracefulShutdown = (server: Server) => {
 
   process.on('SIGTERM', () => shutdown('SIGTERM signal received'));
   process.on('SIGINT', () => shutdown('SIGINT signal received'));
-  process.on('unhandledRejection', (err) => shutdown('Unhandled Rejection detected', err));
-  process.on('uncaughtException', (err) => shutdown('Uncaught Exception detected', err));
+  process.on('unhandledRejection', (err) =>
+    shutdown('Unhandled Rejection detected', err),
+  );
+  process.on('uncaughtException', (err) =>
+    shutdown('Uncaught Exception detected', err),
+  );
 };
 
 export default serverGracefulShutdown;
