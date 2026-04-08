@@ -28,6 +28,7 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
 
       if (cachedData) {
         // Cache hit: return the stored JSON
+        logger.info(`[Redis] Cache Hit: ${cacheKey}`);
         return res.status(200).json(JSON.parse(cachedData));
       }
 
@@ -44,7 +45,7 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
         }
         return originalJson.call(this, body);
       };
-
+      logger.info(`[Redis] Cache Miss: ${cacheKey}`);
       next();
     } catch (error) {
       // In case of any error with Redis, proceed to the next middleware (database)

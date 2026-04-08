@@ -12,7 +12,7 @@ import { redisClient } from '@config/redis.config';
 import { createUserToken } from '@utils/userTokens';
 import { verifyToken } from '@utils/jwt';
 
-const OTP_EXPIRATION = 5 * 60; // 5 minutes
+const OTP_EXPIRATION = 1 * 60; // 1 minute
 
 const registerUser = async (payload: IUser) => {
   const isUserExist = await User.findOne({ email: payload.email });
@@ -121,6 +121,13 @@ const sendOTP = async (email: string) => {
   await sendEmail(email, 'Your OTP Code', 'verifyOTP', {
     name: user.name,
     otp,
+    sentAt: new Date().toLocaleString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Dhaka', // Since the user is in Dhaka
+    }),
   });
 
   return null;
