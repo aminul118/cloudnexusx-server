@@ -11,7 +11,7 @@ const router = Router();
 // Public routes
 router.get(
   '/',
-  cacheMiddleware('partners', 0),
+  cacheMiddleware('partners', 0, { onlyDefault: true }),
   PartnerController.getAllPartners,
 );
 router.get(

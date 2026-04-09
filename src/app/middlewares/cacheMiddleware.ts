@@ -1,35 +1,56 @@
 import { Request, Response, NextFunction } from 'express';
-import { redis } from '@config/redis.config';
+import { cacheService } from '@utils/CacheService';
 import logger from '@utils/logger';
+
+interface ICacheOptions {
+  onlyDefault?: boolean;
+}
 
 /**
  * Express middleware to cache GET requests in Redis.
  * @param keyPrefix - Prefix for the Redis key (e.g., 'services')
- * @param ttl - Time to live in seconds (default: 3600)
+ * @param ttl - Time to live in seconds (0 for infinite)
+ * @param options - Additional options for caching
  */
-export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
+export const cacheMiddleware = (
+  keyPrefix: string,
+  ttl = 3600,
+  options: ICacheOptions = {},
+) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // We only cache GET requests
     if (req.method !== 'GET') {
       return next();
     }
 
+    // Check for targeted caching (only default requests)
+    if (options.onlyDefault) {
+      const queryKeys = Object.keys(req.query);
+      // Filter out common "default" parameters if any, but usually a clean query is default
+      // We allow empty query or query with only page/limit if they are default values
+      const isNotDefault = queryKeys.some(
+        (key) => !['page', 'limit', 'sort'].includes(key),
+      );
+
+      // If it's a complex query and we only want defaults, skip caching
+      if (isNotDefault) {
+        return next();
+      }
+
+      // Check if page/limit/sort are explicitly set to non-default?
+      // For now, any search/filter will have other keys, so this is a good professional check.
+    }
+
     // Generate a unique cache key based on the full URL (including query params)
     const cacheKey = `cache:${keyPrefix}:${req.originalUrl || req.url}`;
 
     try {
-      // If Redis is not connected, skip caching
-      if (redis.status !== 'ready') {
-        return next();
-      }
-
-      // Try to fetch from Redis
-      const cachedData = await redis.get(cacheKey);
+      // Try to fetch from Redis using service
+      const cachedData = await cacheService.get(cacheKey);
 
       if (cachedData) {
         // Cache hit: return the stored JSON
-        logger.info(`[Redis] Cache Hit: ${cacheKey}`);
-        return res.status(200).json(JSON.parse(cachedData));
+        return res.status(200).json(cachedData);
       }
 
       // Cache miss: override res.json to intercept and store the response body
@@ -37,18 +58,13 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
       res.json = function (body) {
         // Store only successful GET responses
         if (res.statusCode === 200 && body && body.success !== false) {
-          const promise =
-            ttl > 0
-              ? redis.set(cacheKey, JSON.stringify(body), 'EX', ttl)
-              : redis.set(cacheKey, JSON.stringify(body));
-
-          promise.catch((err) => {
+          cacheService.set(cacheKey, body, ttl).catch((err) => {
             logger.error(`[Redis] Failed to set cache for ${cacheKey}:`, err);
           });
         }
         return originalJson.call(this, body);
       };
-      logger.info(`[Redis] Cache Miss: ${cacheKey}`);
+
       next();
     } catch (error) {
       // In case of any error with Redis, proceed to the next middleware (database)
@@ -63,19 +79,5 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
  * @param keyPrefix - The prefix to clear (e.g., 'services')
  */
 export const clearCache = async (keyPrefix: string) => {
-  try {
-    if (redis.status !== 'ready') return;
-
-    // Find all keys with the given prefix
-    const keys = await redis.keys(`cache:${keyPrefix}:*`);
-
-    if (keys.length > 0) {
-      await redis.del(keys);
-      logger.log(
-        `[Redis] Cleared ${keys.length} cache keys for prefix: ${keyPrefix}`,
-      );
-    }
-  } catch (error) {
-    logger.error(`[Redis] Clear cache error for prefix ${keyPrefix}:`, error);
-  }
+  await cacheService.deleteByPrefix(keyPrefix);
 };

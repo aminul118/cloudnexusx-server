@@ -9,7 +9,7 @@ const createUser = catchAsync(async (req, res) => {
   const result = await UserService.createUserService(req.body);
 
   // Clear cache for users
-  clearCache('users');
+  await clearCache('users');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -20,14 +20,20 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  const { email, role } = req.user as JwtPayload;
-  const result = await UserService.getMe(email, role);
+  const { email, role: decodedRole } = req.user as JwtPayload;
+  const result = await UserService.getMe(email);
+
+  // Detect if role has changed since token was issued
+  const isRoleChanged = result && result.role !== decodedRole;
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User is retrieved successfully',
-    data: result,
+    data: {
+      ...result?.toObject(),
+      roleChanged: isRoleChanged,
+    },
   });
 });
 
@@ -48,7 +54,7 @@ const updateUserStatus = catchAsync(async (req, res) => {
   const result = await UserService.updateUserStatus(id as string, status);
 
   // Clear cache for users
-  clearCache('users');
+  await clearCache('users');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,7 +70,7 @@ const updateUserRole = catchAsync(async (req, res) => {
   const result = await UserService.updateUserRole(id as string, role);
 
   // Clear cache for users
-  clearCache('users');
+  await clearCache('users');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -89,7 +95,7 @@ const deleteUser = catchAsync(async (req, res) => {
   const result = await UserService.deleteUserFromDB(id as string);
 
   // Clear cache for users
-  clearCache('users');
+  await clearCache('users');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -104,7 +110,7 @@ const updateProfile = catchAsync(async (req, res) => {
   const result = await UserService.updateProfile(email, req.body);
 
   // Clear cache for users
-  clearCache('users');
+  await clearCache('users');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

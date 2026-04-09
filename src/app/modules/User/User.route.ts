@@ -12,14 +12,14 @@ router.get('/me', auth('ADMIN', 'USER', 'SUPER_ADMIN'), UserController.getMe);
 router.get(
   '/statistics',
   auth('ADMIN', 'SUPER_ADMIN'),
-  cacheMiddleware('users', 0),
+  cacheMiddleware('users', 0, { onlyDefault: true }),
   UserController.getStatistics,
 );
 
 router.get(
   '/',
   auth('ADMIN', 'SUPER_ADMIN'),
-  cacheMiddleware('users', 0),
+  cacheMiddleware('users', 0, { onlyDefault: true }),
   UserController.getAllUsers,
 );
 

@@ -22,7 +22,7 @@ const createService = catchAsync(async (req: Request, res: Response) => {
   const result = await ServiceServices.createServiceIntoDB(payload);
 
   // Clear cache for services
-  clearCache('services');
+  await clearCache('services');
 
   sendResponse(res, {
     statusCode: 201,
@@ -80,8 +80,7 @@ const updateServiceBySlug = catchAsync(async (req: Request, res: Response) => {
     payload,
   );
 
-  // Clear cache for services
-  clearCache('services');
+  await clearCache('services');
 
   sendResponse(res, {
     statusCode: 200,
@@ -97,8 +96,7 @@ const deleteServiceBySlug = catchAsync(async (req: Request, res: Response) => {
     slug as string,
   );
 
-  // Clear cache for services
-  clearCache('services');
+  await clearCache('services');
 
   sendResponse(res, {
     statusCode: 200,

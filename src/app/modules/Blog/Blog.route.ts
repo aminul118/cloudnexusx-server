@@ -9,7 +9,11 @@ import { cacheMiddleware } from '../../middlewares/cacheMiddleware';
 const router = Router();
 
 // Public routes
-router.get('/', cacheMiddleware('blogs', 0), BlogController.getAllBlogs);
+router.get(
+  '/',
+  cacheMiddleware('blogs', 0, { onlyDefault: true }),
+  BlogController.getAllBlogs,
+);
 router.get(
   '/:slug',
   cacheMiddleware('blogs', 0),
