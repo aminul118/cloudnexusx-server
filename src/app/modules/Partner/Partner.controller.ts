@@ -18,7 +18,7 @@ const createPartner = catchAsync(async (req, res) => {
   const result = await PartnerService.createPartnerInDB(req.body);
 
   // Clear cache for partners
-  clearCache('partners');
+  await clearCache('partners');
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -70,7 +70,7 @@ const updatePartnerBySlug = catchAsync(async (req, res) => {
   );
 
   // Clear cache for partners
-  clearCache('partners');
+  await clearCache('partners');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -85,7 +85,7 @@ const deletePartnerBySlug = catchAsync(async (req, res) => {
   const result = await PartnerService.deletePartnerBySlugFromDB(slug as string);
 
   // Clear cache for partners
-  clearCache('partners');
+  await clearCache('partners');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

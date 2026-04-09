@@ -10,7 +10,7 @@ const router = Router();
 
 router.get(
   '/',
-  cacheMiddleware('services', 0),
+  cacheMiddleware('services', 0, { onlyDefault: true }),
   ServiceControllers.getAllServices,
 );
 

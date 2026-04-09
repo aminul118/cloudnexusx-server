@@ -36,8 +36,8 @@ const getSingleUserFromDB = async (id: string) => {
   return result;
 };
 
-const getMe = async (email: string, role: string) => {
-  const result = await User.findOne({ email, role });
+const getMe = async (email: string) => {
+  const result = await User.findOne({ email });
   return result;
 };
 

@@ -31,7 +31,7 @@ const createPortfolio = catchAsync(async (req: Request, res: Response) => {
   const result = await PortfolioService.createPortfolioIntoDB(portfolioData);
 
   // Clear cache for portfolios
-  clearCache('portfolios');
+  await clearCache('portfolios');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -95,7 +95,7 @@ const updatePortfolioBySlug = catchAsync(
     );
 
     // Clear cache for portfolios
-    clearCache('portfolios');
+    await clearCache('portfolios');
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -113,7 +113,7 @@ const deletePortfolioBySlug = catchAsync(
     );
 
     // Clear cache for portfolios
-    clearCache('portfolios');
+    await clearCache('portfolios');
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

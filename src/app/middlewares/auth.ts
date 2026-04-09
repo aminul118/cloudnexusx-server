@@ -35,7 +35,7 @@ const auth = (...requiredRoles: UserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
-    const { role, email } = decoded;
+    const { email } = decoded;
 
     // checking if the user is exist
     const user = await User.findOne({ email });
@@ -58,11 +58,8 @@ const auth = (...requiredRoles: UserRole[]) => {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
     }
 
-    if (requiredRoles.length && !requiredRoles.includes(role)) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'You are not authorized  hi!',
-      );
+    if (requiredRoles.length && !requiredRoles.includes(user.role)) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
     req.user = decoded as JwtPayload;

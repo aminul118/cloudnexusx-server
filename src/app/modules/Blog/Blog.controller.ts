@@ -51,7 +51,7 @@ const createBlog = catchAsync(async (req, res) => {
   );
 
   // Clear cache for blogs
-  clearCache('blogs');
+  await clearCache('blogs');
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -95,8 +95,7 @@ const updateBlogBySlug = catchAsync(async (req, res) => {
     payload,
   );
 
-  // Clear cache for blogs
-  clearCache('blogs');
+  await clearCache('blogs');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -110,8 +109,7 @@ const deleteBlogBySlug = catchAsync(async (req, res) => {
   const { slug } = req.params;
   const result = await BlogService.deleteBlogBySlugFromDB(slug as string);
 
-  // Clear cache for blogs
-  clearCache('blogs');
+  await clearCache('blogs');
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
