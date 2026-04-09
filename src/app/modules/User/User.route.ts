@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { UserController } from './User.controller';
 import auth from '../../middlewares/auth';
+import { cacheMiddleware } from '@middleware/cacheMiddleware';
 
 const router = Router();
 
@@ -11,12 +12,14 @@ router.get('/me', auth('ADMIN', 'USER', 'SUPER_ADMIN'), UserController.getMe);
 router.get(
   '/statistics',
   auth('ADMIN', 'SUPER_ADMIN'),
+  cacheMiddleware('users', 0),
   UserController.getStatistics,
 );
 
 router.get(
   '/',
-  auth('ADMIN', 'SUPER_ADMIN', 'USER'),
+  auth('ADMIN', 'SUPER_ADMIN'),
+  cacheMiddleware('users', 0),
   UserController.getAllUsers,
 );
 

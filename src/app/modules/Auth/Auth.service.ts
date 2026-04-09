@@ -7,12 +7,9 @@ import AppError from '@error/AppError';
 import sendEmail from '@utils/sendEmail';
 import crypto from 'crypto';
 import { hashPassword } from '@utils/hashPassword';
-
-import { redisClient } from '@config/redis.config';
+import { redis } from '@config/redis.config';
 import { createUserToken } from '@utils/userTokens';
 import { verifyToken } from '@utils/jwt';
-
-const OTP_EXPIRATION = 1 * 60; // 1 minute
 
 const registerUser = async (payload: IUser) => {
   const isUserExist = await User.findOne({ email: payload.email });
@@ -112,11 +109,8 @@ const sendOTP = async (email: string) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const redisKey = `otp:${email}`;
 
-  await redisClient.set(redisKey, otp, {
-    EX: OTP_EXPIRATION,
-  });
+  await redis.set(`otp:${email}`, otp, 'EX', 60);
 
   await sendEmail(email, 'Your OTP Code', 'verifyOTP', {
     name: user.name,
@@ -139,8 +133,7 @@ const verifyOTP = async (email: string, otp: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const redisKey = `otp:${email}`;
-  const savedOtp = await redisClient.get(redisKey);
+  const savedOtp = await redis.get(`otp:${email}`);
 
   if (!savedOtp || savedOtp !== otp) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Invalid or expired OTP');

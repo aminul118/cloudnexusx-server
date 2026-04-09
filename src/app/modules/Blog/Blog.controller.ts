@@ -125,9 +125,6 @@ const incrementBlogView = catchAsync(async (req, res) => {
   const { slug } = req.params;
   const result = await BlogService.incrementBlogViewInDB(slug as string);
 
-  // Clear cache for blogs to show updated view count
-  clearCache('blogs');
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
