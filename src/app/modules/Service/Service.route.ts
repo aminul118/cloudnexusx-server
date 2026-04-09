@@ -10,13 +10,13 @@ const router = Router();
 
 router.get(
   '/',
-  cacheMiddleware('services', 3600),
+  cacheMiddleware('services', 0),
   ServiceControllers.getAllServices,
 );
 
 router.get(
   '/slug/:slug',
-  cacheMiddleware('services', 3600),
+  cacheMiddleware('services', 0),
   ServiceControllers.getSingleServiceBySlug,
 );
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { redisClient } from '@config/redis.config';
+import { redis } from '@config/redis.config';
 import logger from '@utils/logger';
 
 /**
@@ -19,12 +19,12 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
 
     try {
       // If Redis is not connected, skip caching
-      if (!redisClient.isOpen) {
+      if (redis.status !== 'ready') {
         return next();
       }
 
       // Try to fetch from Redis
-      const cachedData = await redisClient.get(cacheKey);
+      const cachedData = await redis.get(cacheKey);
 
       if (cachedData) {
         // Cache hit: return the stored JSON
@@ -37,11 +37,14 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
       res.json = function (body) {
         // Store only successful GET responses
         if (res.statusCode === 200 && body && body.success !== false) {
-          redisClient
-            .setEx(cacheKey, ttl, JSON.stringify(body))
-            .catch((err) => {
-              logger.error(`[Redis] Failed to set cache for ${cacheKey}:`, err);
-            });
+          const promise =
+            ttl > 0
+              ? redis.set(cacheKey, JSON.stringify(body), 'EX', ttl)
+              : redis.set(cacheKey, JSON.stringify(body));
+
+          promise.catch((err) => {
+            logger.error(`[Redis] Failed to set cache for ${cacheKey}:`, err);
+          });
         }
         return originalJson.call(this, body);
       };
@@ -61,13 +64,13 @@ export const cacheMiddleware = (keyPrefix: string, ttl = 3600) => {
  */
 export const clearCache = async (keyPrefix: string) => {
   try {
-    if (!redisClient.isOpen) return;
+    if (redis.status !== 'ready') return;
 
     // Find all keys with the given prefix
-    const keys = await redisClient.keys(`cache:${keyPrefix}:*`);
+    const keys = await redis.keys(`cache:${keyPrefix}:*`);
 
     if (keys.length > 0) {
-      await redisClient.del(keys);
+      await redis.del(keys);
       logger.log(
         `[Redis] Cleared ${keys.length} cache keys for prefix: ${keyPrefix}`,
       );

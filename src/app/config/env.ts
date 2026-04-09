@@ -39,10 +39,10 @@ const envVars = {
     SMTP_FROM: getEnv('SMTP_FROM'),
   },
   REDIS: {
-    REDIS_HOST: getEnv('REDIS_HOST'),
-    REDIS_PORT: Number(getEnv('REDIS_PORT', '6379')),
-    REDIS_USERNAME: getEnv('REDIS_USERNAME', 'default'),
-    REDIS_PASSWORD: getEnv('REDIS_PASSWORD'),
+    host: getEnv('REDIS_HOST'),
+    port: Number(getEnv('REDIS_PORT', '6379')),
+    username: getEnv('REDIS_USERNAME', 'default'),
+    password: getEnv('REDIS_PASSWORD'),
   },
   CLOUDINARY: {
     CLOUDINARY_NAME: getEnv('CLOUDINARY_NAME'),

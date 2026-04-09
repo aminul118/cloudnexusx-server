@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Query } from 'mongoose';
-import { redisClient } from '../config/redis.config';
+import { redis } from '../config/redis.config';
 
 export class QueryBuilder<T> {
   public modelQuery: Query<T[], T>;
@@ -95,15 +95,17 @@ export class QueryBuilder<T> {
    * @param ttl Time to live in seconds
    */
   async cache(key: string, ttl = 3600) {
-    const cachedData = await redisClient.get(key);
+    const cachedData = await redis.get(key);
     if (cachedData) {
       return JSON.parse(cachedData);
     }
 
     const result = await this.modelQuery;
-    await redisClient.set(key, JSON.stringify(result), {
-      EX: ttl,
-    });
+    if (ttl > 0) {
+      await redis.set(key, JSON.stringify(result), 'EX', ttl);
+    } else {
+      await redis.set(key, JSON.stringify(result));
+    }
 
     return result;
   }

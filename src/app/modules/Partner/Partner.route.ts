@@ -11,12 +11,12 @@ const router = Router();
 // Public routes
 router.get(
   '/',
-  cacheMiddleware('partners', 3600),
+  cacheMiddleware('partners', 0),
   PartnerController.getAllPartners,
 );
 router.get(
   '/:slug',
-  cacheMiddleware('partners', 3600),
+  cacheMiddleware('partners', 0),
   PartnerController.getPartnerBySlug,
 );
 

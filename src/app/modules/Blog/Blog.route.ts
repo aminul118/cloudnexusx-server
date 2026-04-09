@@ -9,10 +9,10 @@ import { cacheMiddleware } from '../../middlewares/cacheMiddleware';
 const router = Router();
 
 // Public routes
-router.get('/', cacheMiddleware('blogs', 3600), BlogController.getAllBlogs);
+router.get('/', cacheMiddleware('blogs', 0), BlogController.getAllBlogs);
 router.get(
   '/:slug',
-  cacheMiddleware('blogs', 3600),
+  cacheMiddleware('blogs', 0),
   BlogController.getSingleBlogBySlug,
 );
 router.patch('/view/:slug', BlogController.incrementBlogView);

@@ -1,24 +1,30 @@
-import { createClient } from 'redis';
+import Redis from 'ioredis';
 import envVars from './env';
 import logger from '../utils/logger';
 
-const { REDIS_HOST, REDIS_PORT, REDIS_USERNAME, REDIS_PASSWORD } =
-  envVars.REDIS;
-const redisUrl = `redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`;
+const { host, port, username, password } = envVars.REDIS;
 
-const redisClient = createClient({
-  url: redisUrl,
+const redis = new Redis({
+  host,
+  port,
+  username,
+  password,
+  maxRetriesPerRequest: null, // Recommended for some use cases like BullMQ
 });
 
-redisClient.on('error', (err: unknown) => {
-  logger.error('Redis Client Error:', err);
+redis.on('error', (err: unknown) => {
+  logger.error('Redis  Error:', err);
+});
+
+redis.on('connect', () => {
+  logger.log('✅ Redis Connected');
 });
 
 export const connectRedis = async () => {
-  if (!redisClient.isOpen) {
-    await redisClient.connect();
-    logger.log('✅ Redis Connected');
+  // ioredis connects automatically, but we can verify status if needed
+  if (redis.status === 'ready') {
+    logger.log('✅ Redis Ready');
   }
 };
 
-export { redisClient };
+export { redis };

@@ -12,13 +12,13 @@ router.post(
 );
 router.get(
   '/',
-  cacheMiddleware('portfolios', 3600),
+  cacheMiddleware('portfolios', 0),
   PortfolioController.getAllPortfolios,
 );
 // Standardized slug-based retrieval
 router.get(
   '/:slug',
-  cacheMiddleware('portfolios', 3600),
+  cacheMiddleware('portfolios', 0),
   PortfolioController.getPortfolioBySlug,
 );
 router.patch(
