@@ -11,7 +11,7 @@ export const ImageHandler = {
    */
   async uploadImage(
     file: Express.Multer.File,
-    folder = 'rangdhanu',
+    folder = 'cloudnexusx',
   ): Promise<string> {
     // 1. Process image with Sharp
     // We convert to WebP or optimize JPEG depending on input, ensuring ~80% quality

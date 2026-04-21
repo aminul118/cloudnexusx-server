@@ -100,14 +100,14 @@ export const generateInvoicePDF = async (
         .font('Helvetica-Bold')
         .fontSize(12)
         .fillColor(TEXT_MAIN)
-        .text('Rangdhanu IT', 50, y + 15);
+        .text('CloudNexus X', 50, y + 15);
       doc
         .font('Helvetica')
         .fontSize(9)
         .fillColor(TEXT_MUTED)
         .text('Web & Digital Solutions', 50, y + 32)
         .text('+880 1781-082064', 50, y + 45)
-        .text('www.rangdhanuit.com', 50, y + 58);
+        .text('www.cloudnexusx.com', 50, y + 58);
 
       // BILL TO
       doc
@@ -361,7 +361,7 @@ export const generateInvoicePDF = async (
           .fontSize(9)
           .fillColor(TEXT_MAIN)
           .text('Bank: BRAC BANK PLC', 315, y + 50);
-        doc.text('A/C Name: Rangdhanu IT', 315, y + 62);
+        doc.text('A/C Name: CloudNexus X', 315, y + 62);
         doc.text('A/C No: 105XXXXXXXXX', 315, y + 74);
 
         y += 110;

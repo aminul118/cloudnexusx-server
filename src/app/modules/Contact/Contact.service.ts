@@ -19,7 +19,7 @@ const createContactIntoDB = async (payload: IContact) => {
   // Send Email to Client (Confirmation)
   await sendEmail(
     payload.email,
-    'Thank you for contacting Rangdhanu IT!',
+    'Thank you for contacting CloudNexus X!',
     'contactClient',
     {
       name: payload.name,

@@ -16,8 +16,8 @@ export const initSocket = (server: HttpServer) => {
       origin: [
         'http://localhost:3000',
         'http://localhost:5173',
-        'https://rangdhanuit.com',
-        'https://www.rangdhanuit.com',
+        'https://cloudnexusx.com',
+        'https://www.cloudnexusx.com',
       ],
       credentials: true,
     },

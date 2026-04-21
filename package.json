@@ -1,7 +1,7 @@
 {
-  "name": "rangdhanu-it-server",
+  "name": "cloudnexusx-server",
   "version": "1.0.0",
-  "description": "Backend server for Rangdhanu IT",
+  "description": "Backend server for CloudNexus X",
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/index.ts",
@@ -50,7 +50,7 @@
   "dependencies": {
     "@types/streamifier": "^0.1.2",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.9.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -63,8 +63,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
     "multer": "^2.1.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^7.0.13",
+    "multer-storage-cloudinary": "^2.2.1",
+    "nodemailer": "^8.0.5",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
